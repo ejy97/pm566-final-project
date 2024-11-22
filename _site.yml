@@ -1,9 +1,10 @@
 name: "pm566-final-project"
+output_dir: "."
 navbar:
   title: "PM566 Final Project"
   left:
     - text: "Home"
-      href: index.Rmd
+      href: index.html
     - text: "About"
       href: about.html
   right:
