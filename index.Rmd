@@ -1,0 +1,15 @@
+---
+title: "PM566 Final Project"
+author: "Your Name"
+output: 
+    html_document:
+        toc: TRUE
+        toc_float: TRUE
+---
+
+## Welcome to My Final Project Website
+
+This is the main landing page for my PM566 final project website. Below are the sections of the website:
+
+- [Lab 12](12-lab.html)
+- [About the Project](about.html)
