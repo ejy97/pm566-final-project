@@ -13,3 +13,98 @@ This is the main landing page for my PM566 final project website. Below are the 
 
 - [Lab 12](12-lab.html)
 - [About the Project](about.html)
+
+
+```{r setup, message=FALSE, echo=FALSE, warning=FALSE}
+library(data.table)
+library(tidyverse)
+library(dplyr)
+library(plotly)
+library(DT)
+library(knitr)
+
+# Initialize code chunk options
+knitr::opts_chunk$set(
+  warning = FALSE,
+  message = FALSE,
+  eval = TRUE,
+  echo = TRUE,
+  cache = FALSE,
+  fig.width = 7, 
+  fig.align = 'center',
+  fig.asp = 0.618,
+  out.width = "700px"
+)
+
+```
+
+```{r load-data, echo=FALSE}
+source("/Users/erinyu/Documents/PM566-lab12-example/process_COVID_data.R")
+```
+
+```{r plot-cases-over-time-1, echo=FALSE}
+# Code for the first plot
+plotly::plot_ly(
+  cv_states,
+  x = ~date,
+  y = ~cases,
+  type = 'scatter',
+  mode = 'lines',
+  color = ~state,
+  text = ~paste("State:", state, "<br>Date:", date, "<br>Cases:", cases)
+) %>%
+  layout(
+    title = "Cumulative COVID-19 Cases Over Time by State",
+    xaxis = list(title = "Date"),
+    yaxis = list(title = "Cumulative Cases")
+  )
+
+```
+
+
+
+```{r stacked-bar-chart, echo=FALSE}
+latest_date <- max(cv_states$date)
+latest_data <- cv_states %>% filter(date == latest_date)
+
+plotly::plot_ly(
+  latest_data,
+  x = ~reorder(state, -new_cases),
+  y = ~new_cases,
+  type = 'bar',
+  name = 'New Cases',
+  marker = list(color = 'orange')
+) %>%
+  add_trace(
+    y = ~new_deaths,
+    name = 'New Deaths',
+    marker = list(color = 'red')
+  ) %>%
+  layout(
+    barmode = 'stack',
+    title = paste("New Cases and Deaths on", latest_date),
+    xaxis = list(title = "State", tickangle = -45),
+    yaxis = list(title = "Count"),
+    legend = list(x = 0.8, y = 1)
+  )
+
+```
+
+```{r box-plot, echo=FALSE}
+plotly::plot_ly(
+  cv_states,
+  y = ~per100k,
+  x = ~state,
+  type = 'box',
+  color = ~state,
+  boxpoints = "all",
+  jitter = 0.3,
+  pointpos = -1.8
+) %>%
+  layout(
+    title = "Distribution of Cases per 100k by State",
+    xaxis = list(title = "State", tickangle = -45),
+    yaxis = list(title = "Cases per 100k"),
+    showlegend = FALSE
+  )
+```
